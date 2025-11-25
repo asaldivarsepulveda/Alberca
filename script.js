@@ -39,14 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 1. VISTA SUPERIOR (Ancho y Largo)
         
-        // El largo (eje mayor) se mapea al ancho CSS del poolBox
-        const newWidthPx = (largo / MAX_LENGTH_M) * MAX_POOL_WIDTH_PX; 
+        // ✅ CORRECCIÓN FINAL:
+        // En esta vista 2.5D, el Ancho (eje menor) debe controlar el CSS width 
+        // para afectar la dimensión que "cuadra" la alberca.
+        const newWidthPx = (ancho / MAX_WIDTH_M) * MAX_POOL_WIDTH_PX; 
         
-        // El ancho (eje menor) se mapea a la altura CSS del poolBox
-        // ✅ CORRECCIÓN: Invertimos las asignaciones
-        const newHeightPx = (ancho / MAX_WIDTH_M) * MAX_POOL_HEIGHT_PX; 
+        // El Largo (eje mayor) debe controlar el CSS height 
+        // para afectar la dimensión que "alarga" la alberca.
+        const newHeightPx = (largo / MAX_LENGTH_M) * MAX_POOL_HEIGHT_PX; 
 
-        // El CSS transformará estos valores en una vista 2.5D
+        // Aplicar los estilos
         poolBox.style.width = `${newWidthPx}px`;
         poolBox.style.height = `${newHeightPx}px`;
 
