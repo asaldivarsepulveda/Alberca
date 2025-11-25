@@ -128,7 +128,7 @@ select, input[type="text"], input[type="tel"] {
     transform: scale(1.2); /* Hacer el checkbox más visible */
 }
 
-/* --- PREVISUALIZACIÓN MEJORADA --- */
+/* --- PREVISUALIZACIÓN MEJORADA (Efecto 2.5D) --- */
 .preview-container {
     background-color: #f0faff;
     padding: 30px;
@@ -136,6 +136,8 @@ select, input[type="text"], input[type="tel"] {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    /* 1. Establecer perspectiva para que los hijos puedan tener un efecto 3D */
+    perspective: 1000px;
 }
 
 /* La Caja de la Alberca (Vista Superior) */
@@ -145,18 +147,25 @@ select, input[type="text"], input[type="tel"] {
     max-height: 200px;
     width: 100%;
     height: 100%;
-    margin: 20px auto;
+    margin: 40px auto; /* Aumentamos el margen para el efecto 3D */
     
-    /* Nueva apariencia: Borde que simula el deck */
-    background-color: #e5e5e5; /* Color claro para el borde/deck */
-    border: 5px solid #d4d4d4;
-    border-radius: 8px; /* Bordes suaves */
+    /* 2. APLICAR TRANSFORMACIÓN ISOMÉTRICA (2.5D) */
+    /* Rota en el eje X para inclinar la vista y en el eje Z para rotar ligeramente */
+    transform: rotateX(55deg) rotateZ(45deg); 
+    transform-style: preserve-3d; 
+    
+    /* Estilo del borde/deck (lo que parece ser el terreno o la orilla) */
+    background-color: #8d6e63; /* Color de madera o piedra clara */
+    border: none; /* Quitamos el borde plano */
+    border-radius: 8px; 
     position: relative;
-    box-sizing: border-box;
-    transition: width 0.5s, height 0.5s, border-color 0.3s;
+    box-sizing: content-box;
+    transition: width 0.5s, height 0.5s;
     
-    /* El agua se crea con un pseudo-elemento interno */
-    padding: 15px; /* Crea el margen del borde del deck */
+    padding: 15px; 
+    
+    /* 3. Sombra que simula la profundidad y elevación del deck */
+    box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Pseudo-elemento para el AGUA dentro de la alberca */
@@ -168,36 +177,43 @@ select, input[type="text"], input[type="tel"] {
     left: 15px;
     right: 15px;
     
-    background-color: var(--color-pool-fill); /* El color del agua */
-    border: 1px solid #00509d; /* Borde del agua */
+    /* 4. AGUA CON GRADIENTE Y BRILLO para realismo */
+    background: 
+        radial-gradient(circle at 60% 40%, rgba(255, 255, 255, 0.6) 5%, transparent 20%), /* Brillo/Reflejo */
+        linear-gradient(to bottom right, #00b4d8 10%, #48cae4 90%); /* Color de agua con gradiente de profundidad */
+        
+    border: none;
     border-radius: 4px;
     
-    /* Sombra que da profundidad */
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4), 
-                0 0 5px rgba(0, 0, 0, 0.2); 
+    /* 5. Sombra interna para el efecto de agua profunda */
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8); 
     z-index: 1;
 }
 
 /* Estilo para Acabados Premium (Mosaico) */
 .pool-box.premium-finish {
     /* El deck cambia a un color premium/piedra */
-    background-color: #bfa87a; 
-    border-color: #a38c64;
-    border-width: 10px;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    background-color: #a38c64; /* Tono de piedra/mármol */
+    /* Borde más definido */
+    border: 5px solid #8b754f;
+    box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 215, 0, 0.8); /* Agregamos un brillo sutil */
 }
 
 /* El muro llorón debe estar encima del agua */
 .muro-lloron-visual {
+    /* Posición en el plano 2.5D (requiere un poco de ajuste) */
     position: absolute;
-    top: 15px; /* Empieza desde el borde del agua */
+    top: 15px; 
     right: calc(5% + 15px);
     width: 15%;
-    height: 8px;
-    background-color: #79e3f6;
+    height: 15px; /* Más alto para verse en 2.5D */
+    background-color: #48cae4; /* El mismo color del agua */
     border-radius: 0 0 5px 5px;
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
-    z-index: 2; /* Asegura que esté sobre el agua */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); /* Sombra más fuerte */
+    z-index: 2; 
+    
+    /* Muro Llorón alineado con la transformación 2.5D */
+    transform: translateZ(5px); /* Lo eleva ligeramente en el plano Z para visibilidad */
 }
 
 /* --- VISTA LATERAL DE PROFUNDIDAD Y ESCALA HUMANA MEJORADA --- */
@@ -207,54 +223,85 @@ select, input[type="text"], input[type="tel"] {
     height: 250px; 
     margin: 20px auto;
     max-width: 300px;
-    border-bottom: 2px solid var(--color-text); 
+    
+    /* ✅ CAMBIO: Quitamos el borde inferior plano para un look más integrado */
+    border-bottom: none; 
     position: relative;
-    padding-bottom: 0; /* Eliminamos padding para asegurar alineación con la línea de suelo */
+    padding-bottom: 0; 
+    
+    /* ✅ NUEVO: Un fondo para simular el terreno o base */
+    background-color: #d4f0f0; /* Un azul muy claro como cielo/fondo */
+    border-radius: 8px; /* Bordes redondeados para el contenedor */
+    overflow: hidden; /* Aseguramos que nada se salga */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave para elevación */
 }
 
 /* Figura Humana: 1.60m de referencia */
 .person-ref {
-    /* 160px de altura para 1.60m de referencia visual */
     height: 160px; 
-    width: 35px; /* Ligeramente más ancha */
+    width: 35px; 
     position: absolute;
-    left: 15px; /* Separación del borde */
-    bottom: 0; /* Alinear perfectamente con la línea de suelo */
+    left: 25px; /* ✅ Ajuste: Más espacio desde el borde izquierdo */
+    bottom: 0; 
     z-index: 10;
     
-    /* Configuración visual del texto y color de fondo */
-    background-color: #008080; /* Color turquesa oscuro para la silueta */
+    background-color: #008080; 
     color: white;
     font-size: 0.8em;
     font-weight: bold;
     text-align: center;
     line-height: 1.1;
-    border-radius: 5px 5px 0 0; /* Bordes redondeados */
-    
-    /* Muestra el texto de 1.60m en la parte superior */
+    border-radius: 5px 5px 0 0; 
     padding-top: 5px; 
 }
 
-/* Eliminamos los pseudo-elementos complejos (:before y :after) y usamos solo el elemento principal. */
-.person-ref::before,
-.person-ref::after {
-    content: none !important; 
-}
-
-
 /* El Agua (Profundidad): Sombra para efecto 3D */
 .depth-box {
-    width: 60%;
-    background-color: var(--color-pool-fill);
-    border: 3px solid #00509d;
-    border-bottom: none;
+    width: 65%; /* ✅ Ajuste: Ligeramente más ancha para mostrar el borde */
+    /* Gradiente para simular profundidad oscura en la parte inferior */
+    background: linear-gradient(to top, #0077b6, #48cae4); 
+    
+    /* ✅ CAMBIO CLAVE: Quitamos el borde directo del depth-box */
+    border: none; 
+    border-bottom: none; 
     position: absolute;
-    right: 10px;
-    bottom: 0; /* Alinear perfectamente con la línea de suelo */
+    right: 0; /* ✅ Ajuste: Pegado al borde derecho del scale-box */
+    bottom: 0; 
     box-sizing: border-box;
     transition: height 0.5s;
-    /* Sombra interna para el efecto de agua profunda */
-    box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.5); 
+    box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.5); 
+    z-index: 5; /* Aseguramos que esté detrás del borde de la alberca */
+}
+
+/* ✅ NUEVO: Pseudo-elemento para el borde superior de la alberca en la vista lateral */
+.depth-box::before {
+    content: '';
+    position: absolute;
+    top: -10px; /* ✅ Elevamos 10px por encima del nivel del agua */
+    left: -10px; /* ✅ Extiende un poco a la izquierda */
+    right: -10px; /* ✅ Extiende un poco a la derecha */
+    height: 10px; /* Altura del borde */
+    background-color: #a38c64; /* Color de deck/borde de la vista superior */
+    border-radius: 5px 5px 0 0;
+    z-index: 6; /* Aseguramos que esté por encima del agua */
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle volumen */
+}
+
+/* ✅ NUEVO: Pseudo-elemento para simular la pared del fondo de la alberca con azulejos */
+.depth-box::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -10px; /* Un poco a la izquierda para mostrar el grosor */
+    width: 10px; /* Grosor de la pared */
+    background-color: #90d8ef; /* Un color de azulejo claro */
+    /* ✅ NUEVO: Pequeño patrón para simular azulejos */
+    background-image: linear-gradient(to right, #90d8ef 50%, #80c8e0 50%);
+    background-size: 2px 2px; /* Tamaño de los "azulejos" */
+    border-radius: 0 0 0 5px; /* Redondeamos solo la esquina inferior izquierda */
+    z-index: 5; /* Debe estar por encima del agua */
+    box-shadow: -3px 0 8px rgba(0,0,0,0.2);
 }
 
 /* Resumen de Accesorios */
