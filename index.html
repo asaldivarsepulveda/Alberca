@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización - Diseño Interactivo de Albercas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">LOGOEMPRESA</div>
+        <nav>
+            <ul>
+                <li><a href="#proyectos">Proyectos</a></li>
+                <li class="active"><a href="#cotizacion">Cotización</a></li>
+                <li><a href="#contacto">Contáctanos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h1>Diseña y Cotiza tu Alberca</h1>
+    
+    <div class="main-content-wrapper">
+
+        <div class="container">
+
+            <div class="form-container">
+                <h2>1. Define las Especificaciones</h2>
+                <form id="pool-form">
+
+                    <label for="ancho">Ancho (m):</label>
+                    <select id="ancho">
+                        <option value="3">3 metros</option>
+                        <option value="4" selected>4 metros</option>
+                        <option value="5">5 metros</option>
+                    </select>
+
+                    <label for="largo">Largo (m):</label>
+                    <select id="largo">
+                        <option value="6">6 metros</option>
+                        <option value="8" selected>8 metros</option>
+                        <option value="10">10 metros</option>
+                    </select>
+
+                    <label for="profundidad">Profundidad Máxima (m):</label>
+                    <select id="profundidad">
+                        <option value="1.2">1.20 m</option>
+                        <option value="1.5" selected>1.50 m</option>
+                        <option value="1.8">1.80 m</option>
+                    </select>
+
+                    <h2>2. Selecciona Extras y Acabados</h2>
+                    <div class="accessory-options">
+                        <label>
+                            <input type="checkbox" id="acabados"> Acabados (Mosaico)
+                        </label>
+                        <label>
+                            <input type="checkbox" id="muro-lloron"> Muro Llorón/Cascada
+                        </label>
+                        <label>
+                            <input type="checkbox" id="bombeo"> Equipo de Bombeo
+                        </label>
+                        <label>
+                            <input type="checkbox" id="calefaccion"> Calefacción/Climatización
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="preview-container">
+                <h2>Vista Previa de tu Diseño</h2>
+                
+                <div id="pool-view-top" class="pool-view top-view">
+                    <p>Vista Superior (Largo x Ancho)</p>
+                    <div id="pool-box" class="pool-box">
+                        <div id="muro-lloron-visual" class="muro-lloron-visual hidden"></div> 
+                    </div>
+                </div>
+
+                <div id="pool-view-side" class="pool-view side-view">
+                    <p>Vista Lateral (Profundidad)</p>
+                    <div class="scale-box">
+                        <div class="person-ref">1.60m</div>
+                        <div id="depth-box" class="depth-box"></div>
+                    </div>
+                </div>
+
+                <div id="accessory-summary" class="accessory-summary">
+                    <p>Extras Incluidos:</p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="cotizacion-container">
+            <h2>📞 3. Solicita Contacto y Presupuesto</h2>
+            <form id="contact-form">
+                <p>Nos pondremos en contacto contigo.</p>
+                
+                <label for="client-name">Tu Nombre:</label>
+                <input type="text" id="client-name" required>
+
+                <label for="client-phone">Tu Número de Teléfono:</label>
+                <input type="tel" id="client-phone" required pattern="[0-9]{10,15}" title="Ingresa un número de teléfono válido (10 a 15 dígitos)">
+                
+                <button type="submit" id="solicitar-btn">Generar y Solicitar Contacto</button>
+                <p id="message-status" class="status-message"></p>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 NOMBREEMPRESA. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
