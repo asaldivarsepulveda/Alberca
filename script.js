@@ -19,17 +19,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const muroLloronVisual = document.getElementById('muro-lloron-visual');
     const accessorySummary = document.getElementById('accessory-summary');
     
-    // Constantes de escalado (basadas en CSS)
-    const SCALE_CONTAINER_HEIGHT_PX = 250; // Altura total del contenedor de escala
-    // La altura real disponible para dibujar la profundidad (250px menos 2px de la línea de suelo)
-    const DRAWING_HEIGHT_PX = SCALE_CONTAINER_HEIGHT_PX - 2; 
+    // Constantes de escalado
+    // ✅ CORRECCIÓN CLAVE: Definimos un factor de escala consistente
+    const PIXELS_PER_METER = 100; // 1 metro = 100 píxeles
 
-    const PERSON_REF_HEIGHT_PX = 160;
+    const PERSON_REF_HEIGHT_PX = 160; // 1.60m * 100px/m = 160px (COHERENTE)
+    
+    // Constantes de la vista superior (se mantienen para la proporción 2.5D)
     const MAX_POOL_WIDTH_PX = 400; 
     const MAX_POOL_HEIGHT_PX = 200; 
-    const MAX_DEPTH_M = 1.8; // Profundidad máxima en metros
     const MAX_LENGTH_M = 10;
     const MAX_WIDTH_M = 5;
+
 
     // 2. Función principal para actualizar la visualización
     function updatePoolPreview() {
@@ -46,9 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
         poolBox.style.width = `${newWidthPx}px`;
         poolBox.style.height = `${newHeightPx}px`;
 
-        // 2. VISTA LATERAL (Profundidad) - ¡CORRECCIÓN APLICADA AQUÍ!
-        // Mapea la profundidad seleccionada a la altura máxima de dibujo (248px)
-        const newDepthHeightPx = (profundidad / MAX_DEPTH_M) * DRAWING_HEIGHT_PX;
+        // 2. VISTA LATERAL (Profundidad) 
+        // ✅ CORRECCIÓN APLICADA: Usamos el factor de escala directo
+        const newDepthHeightPx = profundidad * PIXELS_PER_METER;
         
         depthBox.style.height = `${newDepthHeightPx}px`;
 
@@ -102,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
     contactForm.addEventListener('submit', function(event) {
         event.preventDefault(); 
         
-        // 1. Recopilar datos de la alberca
         const poolData = {
             ancho: anchoSelect.value + 'm',
             largo: largoSelect.value + 'm',
@@ -113,23 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
             calefaccion: calefaccionCheckbox.checked ? 'Sí' : 'No',
         };
         
-        // 2. Recopilar datos de contacto
         const clientData = {
             name: document.getElementById('client-name').value,
             phone: document.getElementById('client-phone').value, 
         };
 
-        // 3. Combinar datos para el envío
-        const requestData = {
-            client: clientData,
-            pool: poolData
-        };
+        const requestData = { client: clientData, pool: poolData };
 
-        // 4. Enviar los datos al backend
         statusMessage.textContent = 'Enviando solicitud...';
         statusMessage.className = 'status-message'; 
         
-        // ** IMPORTANTE: Esta es la URL de tu API de servidor **
         const SERVER_ENDPOINT = '/api/solicitar-cotizacion'; 
 
         fetch(SERVER_ENDPOINT, {
@@ -141,20 +134,16 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => {
             if (!response.ok) {
-                // El servidor no respondió con éxito (ej: 404, 500)
                 throw new Error('Error en el servidor al procesar la solicitud.');
             }
-            // Asume que el servidor devuelve un JSON
             return response.json(); 
         })
         .then(data => {
-            // Éxito: El servidor procesó la solicitud (y envió el correo a tu equipo interno)
             statusMessage.textContent = '✅ ¡Solicitud recibida! Te contactaremos al teléfono ' + clientData.phone + '.';
             statusMessage.className = 'status-message success';
             contactForm.reset(); 
         })
         .catch((error) => {
-            // Error de conexión o error de procesamiento capturado
             console.error('Error:', error);
             statusMessage.textContent = '❌ Error al solicitar la cotización. Intenta más tarde.';
             statusMessage.className = 'status-message error';
