@@ -20,10 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const accessorySummary = document.getElementById('accessory-summary');
     
     // Constantes de escalado
-    // ✅ CORRECCIÓN CLAVE: Definimos un factor de escala consistente
     const PIXELS_PER_METER = 100; // 1 metro = 100 píxeles
-
-    const PERSON_REF_HEIGHT_PX = 160; // 1.60m * 100px/m = 160px (COHERENTE)
     
     // Constantes de la vista superior (se mantienen para la proporción 2.5D)
     const MAX_POOL_WIDTH_PX = 400; 
@@ -41,14 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const profundidad = parseFloat(profundidadSelect.value);
         
         // 1. VISTA SUPERIOR (Ancho y Largo)
-        const newWidthPx = (ancho / MAX_WIDTH_M) * MAX_POOL_WIDTH_PX;
-        const newHeightPx = (largo / MAX_LENGTH_M) * MAX_POOL_HEIGHT_PX; 
+        
+        // El largo (eje mayor) se mapea al ancho CSS del poolBox
+        const newWidthPx = (largo / MAX_LENGTH_M) * MAX_POOL_WIDTH_PX; 
+        
+        // El ancho (eje menor) se mapea a la altura CSS del poolBox
+        // ✅ CORRECCIÓN: Invertimos las asignaciones
+        const newHeightPx = (ancho / MAX_WIDTH_M) * MAX_POOL_HEIGHT_PX; 
 
+        // El CSS transformará estos valores en una vista 2.5D
         poolBox.style.width = `${newWidthPx}px`;
         poolBox.style.height = `${newHeightPx}px`;
 
         // 2. VISTA LATERAL (Profundidad) 
-        // ✅ CORRECCIÓN APLICADA: Usamos el factor de escala directo
         const newDepthHeightPx = profundidad * PIXELS_PER_METER;
         
         depthBox.style.height = `${newDepthHeightPx}px`;
